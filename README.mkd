@@ -16,6 +16,58 @@ Interested developers can join the [sefaria-dev mailing list](https://groups.goo
 - If you believe you have encountered a bug while using our website or mobile app, you can report it [here](https://sefaria.formstack.com/forms/bug_report).
 - If you find bugs in the code, you can create a [GitHub Issue](https://github.com/sefaria/Sefaria-Project/issues?direction=desc&page=1&sort=created&state=open).
 
+## Installation
+### 1) Install Docker and Docker Compose
+Follow the instructions [here](https://docs.docker.com/docker-for-mac/install/) to install Docker and [here](https://docs.docker.com/compose/install/) to install Docker Compose.
+
+### 1b) Copy configurations
+```bash
+Current: cp sefaria/local_settings_example.py sefaria/local_settings.py
+Proposed: cp sefaria/local_settings_docker_compose.py sefaria/local_settings.py
+```
+
+### 2) Build the project
+In your terminal run:
+```bash
+docker-compose build
+```
+
+### 3) Setup MongoDB
+In your terminal run:
+```bash
+docker-compose up -d db
+docker-compose exec db ./restoredb.sh
+```
+
+### 4) Setup the Node Server
+In your terminal run:
+```bash
+docker-compose run --rm --no-deps node npm install
+docker-compose run --rm --no-deps node npm run setup
+```
+
+### 5) Setup the Postgres Database
+In your terminal run:
+```bash
+docker-compose run --rm web python manage.py migrate
+```
+
+### 4) Start the Project
+In your terminal run:
+```bash
+docker-compose up -d
+```
+
+### 6) Run webpack:
+This will connect you to the django container. Now run:
+
+```bash
+docker-compose run --rm node npm run build-client
+```
+or
+```bash
+docker-compose run --rm node npm run watch-client
+```
 
 ## Thanks
 
